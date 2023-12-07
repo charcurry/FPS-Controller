@@ -27,7 +27,7 @@ public class FPS_Controller : MonoBehaviour
     private CharacterController characterController;
     private Camera playerCamera;
     private bool canUncrouch;
-    public bool isGrounded;
+    private bool isGrounded;
     private Vector3 velocity;
     private bool crouching;
     private bool sprinting;

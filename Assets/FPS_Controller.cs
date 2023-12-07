@@ -10,6 +10,7 @@ public class FPS_Controller : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float walkSpeed = 3.0f;
     [SerializeField] private float sprintSpeed = 6.0f;
+    [SerializeField] private float crouchSpeed = 1.5f;
     [SerializeField] private float speed;
 
     [Header("Look Settings")]
@@ -26,9 +27,10 @@ public class FPS_Controller : MonoBehaviour
     private CharacterController characterController;
     private Camera playerCamera;
     private bool canUncrouch;
-    private bool isGrounded;
+    public bool isGrounded;
     private Vector3 velocity;
-
+    private bool crouching;
+    private bool sprinting;
 
     
     public Vector3 prevPos;
@@ -56,12 +58,32 @@ public class FPS_Controller : MonoBehaviour
     {
         Vector3 horizontalMovement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
-
-        if (Input.GetButton("Sprint") && isGrounded)
+        if (Input.GetButton("Crouch"))
         {
-            speed = sprintSpeed;
+            characterController.height = 0.9f;
+            speed = crouchSpeed;
+            crouching = true;
         }
-        else
+        else if (canUncrouch == false)
+        {
+            characterController.height = 0.9f;
+            speed = crouchSpeed;
+            crouching = true;
+        }
+        else if (canUncrouch == true)
+        {
+            characterController.height = 1.8f;
+            speed = walkSpeed;
+            crouching = false;
+        }
+
+        if (Input.GetButton("Sprint") && isGrounded && !crouching)
+        {
+            Debug.Log("sprint");
+            speed = sprintSpeed;
+            sprinting = true;
+        }
+        else if (!sprinting && !crouching)
         {
             speed = walkSpeed;
         }

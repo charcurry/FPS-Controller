@@ -25,8 +25,9 @@ public class FPS_Controller : MonoBehaviour
     private Vector3 currentMovement = Vector3.zero;
     private CharacterController characterController;
     private Camera playerCamera;
-    public bool isGrounded;
-    public Vector3 velocity;
+    private bool canUncrouch;
+    private bool isGrounded;
+    private Vector3 velocity;
 
 
     
@@ -36,7 +37,6 @@ public class FPS_Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(CalcVelocity());
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         characterController = this.gameObject.GetComponent<CharacterController>();
@@ -48,7 +48,7 @@ public class FPS_Controller : MonoBehaviour
     {
         HandleMovement();
         HandleLook();
-
+        CheckCeiling();
         CheckGround();
     }
 
@@ -119,19 +119,17 @@ public class FPS_Controller : MonoBehaviour
         }
     }
 
-    //IEnumerator CalcVelocity()
-    //{
-    //    while (Application.isPlaying)
-    //    {
-    //        // Position at frame start
-    //        prevPos = transform.position;
-    //        // Wait till it the end of the frame
-    //        yield return new WaitForEndOfFrame();
-    //        // Calculate velocity: Velocity = DeltaPosition / DeltaTime
-    //        currVel = (transform.position - prevPos) / Time.deltaTime;
-    //        speed = currVel.magnitude;
-    //        //Debug.Log(speed);
-    //    }
-    //}
+    private void CheckCeiling()
+    {
+        Debug.DrawRay(transform.position, Vector3.up * distance, Color.red);
 
+        if (Physics.Raycast((transform.position), Vector3.up * distance, out RaycastHit hit, distance))
+        {
+            canUncrouch = false;
+        }
+        else
+        {
+            canUncrouch = true;
+        }
+    }
 }

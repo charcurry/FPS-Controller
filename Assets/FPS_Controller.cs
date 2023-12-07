@@ -9,6 +9,8 @@ public class FPS_Controller : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float walkSpeed = 3.0f;
+    [SerializeField] private float sprintSpeed = 6.0f;
+    [SerializeField] private float speed;
 
     [Header("Look Settings")]
     [SerializeField] private float mouseSensitivity = 2.0f;
@@ -27,7 +29,7 @@ public class FPS_Controller : MonoBehaviour
     public Vector3 velocity;
 
 
-    public float speed;
+    
     public Vector3 prevPos;
     public Vector3 currVel;
 
@@ -55,6 +57,15 @@ public class FPS_Controller : MonoBehaviour
         Vector3 horizontalMovement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
 
+        if (Input.GetButton("Sprint") && isGrounded)
+        {
+            speed = sprintSpeed;
+        }
+        else
+        {
+            speed = walkSpeed;
+        }
+
         horizontalMovement = transform.rotation * horizontalMovement;
         if (horizontalMovement.sqrMagnitude > 1f)
         {
@@ -63,8 +74,8 @@ public class FPS_Controller : MonoBehaviour
 
         //characterController.Move(velocity * Time.deltaTime);
 
-        currentMovement.x = horizontalMovement.x * walkSpeed;
-        currentMovement.z = horizontalMovement.z * walkSpeed;
+        currentMovement.x = horizontalMovement.x * speed;
+        currentMovement.z = horizontalMovement.z * speed;
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
